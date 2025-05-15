@@ -58,3 +58,17 @@ jobs:
         with:
           name: model-metrics
           path: metrics_report.txt
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main'
+        with:
+          tag_name: ${{ github.sha }}
+          name: Release ${{ github.sha }}
+          files: |
+            metrics_report.txt
+            result.csv
+            fullResult.csv
+            ./mlruns/**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
