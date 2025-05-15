@@ -52,3 +52,9 @@ jobs:
           path: |
             result.csv
             fullResult.csv
+
+      - name: Upload model metrics
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-metrics
+          path: metrics_report.txt

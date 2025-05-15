@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 import mlflow
 import pandas as pd
@@ -48,9 +49,8 @@ def train_model(data_path: str) -> None:
         precision = precision_score(y_test, preds, average='weighted')
         recall = recall_score(y_test, preds, average='weighted')
         print(f"F1 score: {f1:.4f}, Precision: {precision:.4f}, Recall: {recall:.4f}")
-
-        # Для подробного отчета по классам:
-        print(classification_report(y_test, preds))
+        report = classification_report(y_test, preds)
+        print(report)
 
         mlflow.log_param("n_estimators", model.n_estimators)
 
@@ -58,6 +58,14 @@ def train_model(data_path: str) -> None:
                             "precision": precision,
                             "recall": recall,
                             "f1_score": f1})
+        
+        with open("metrics_report.txt", "w") as f:
+            f.write(f"Accuracy: {accuracy:.4f}\n")
+            f.write(f"F1 score: {f1:.4f}\n")
+            f.write(f"Precision: {precision:.4f}\n")
+            f.write(f"Recall: {recall:.4f}\n\n")
+            f.write("Classification report:\n")
+            f.write(report)
 
         mlflow.set_tags({
             "model": "RandomForest",
