@@ -69,6 +69,6 @@ jobs:
             metrics_report.txt
             result.csv
             fullResult.csv
-            ./mlruns/**
+            ./mlruns/**.pkl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
