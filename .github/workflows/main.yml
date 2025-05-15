@@ -24,6 +24,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Start MLflow Tracking Server
+        run: |
+          nohup mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root ./mlruns --host 127.0.0.1 --port 5000 > mlflow.log 2>&1 &
+          sleep 5
+        env:
+          MLFLOW_TRACKING_URI: http://127.0.0.1:5000
+
       - name: Train model
         run: |
           python model.py train.csv
@@ -31,3 +38,9 @@ jobs:
       - name: Evaluate model
         run: |
           python evaluate.py test.csv
+
+      - name: Upload MLflow runs
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlruns
+          path: ./mlruns
